@@ -1,7 +1,8 @@
 const { selectArticleById, selectAllArticles } = require('../models/articlesModels');
 
 exports.sendAllArticles = (req, res, next) => {
-	selectAllArticles()
+	let query = req.query;
+	selectAllArticles(query)
 		.then(articles => {
 			res.status(200).send({ articles });
 		})
