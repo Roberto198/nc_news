@@ -1,4 +1,9 @@
-const { selectArticleById, selectAllArticles, selectArticlesComments } = require('../models/articlesModels');
+const {
+	selectArticleById,
+	selectAllArticles,
+	selectArticlesComments,
+	patchArticle,
+} = require('../models/articlesModels');
 
 exports.sendAllArticles = (req, res, next) => {
 	let query = req.query;
@@ -26,4 +31,10 @@ exports.sendArticlesComments = (req, res, next) => {
 			res.status(200).send(comments);
 		})
 		.catch(next);
+};
+
+exports.updateArticle = (req, res, next) => {
+	patchArticle(req.body.inc_votes, req.params.article_id).then(article => {
+		res.status(200).send({ updated_article: article });
+	});
 };

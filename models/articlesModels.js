@@ -43,3 +43,24 @@ exports.selectArticlesComments = (id, query) => {
 		.orderBy(query.sort_by || 'created_at', query.order || 'desc')
 		.catch(err => console.log(err));
 };
+
+exports.patchArticle = (vote, id) => {
+	console.log(vote);
+	return connection
+		.select(
+			'articles.article_id',
+			'articles.title',
+			'articles.votes',
+			'articles.topic',
+			'articles.author',
+			'articles.created_at'
+		)
+		.where('articles.article_id', '=', id)
+		.from('articles')
+		.join('comments', 'articles.article_id', '=', 'comments.article_id')
+		.count('comments.article_id as comment_count')
+		.groupBy('articles.article_id')
+		.increment('votes', vote || 0)
+		.returning('*')
+		.catch(err => console.log(err));
+};

@@ -1,4 +1,4 @@
-# Northcoders News API
+<!-- # Northcoders News API
 
 ## Background
 
@@ -71,7 +71,7 @@ You should have separate tables for topics, articles, users and comments, and yo
 -   After taking the happy path when testing a route, think about how a client could make it go wrong. Add a test for that situation, then error handling to deal with it gracefully.
 -   **HINT**: You will need to take advantage of knex migrations in order to efficiently test your application.
 
----
+--- -->
 
 ### Vital Routes
 
@@ -98,7 +98,7 @@ GET /api
 
 ---
 
-### Route Requirements
+<!-- ### Route Requirements
 
 _**All of your endpoints should send the below responses in an object, with a key name of what it is that being sent. E.g.**_
 
@@ -133,13 +133,13 @@ GET /api/topics
     -   `slug`
     -   `description`
 
----
+--- -->
 
 ```http
 GET /api/articles
 ```
 
-#### Responds with
+<!-- #### Responds with
 
 -   an `articles` array of article objects, each of which should have the following properties:
     -   `author` which is the `username` from the users table
@@ -148,7 +148,7 @@ GET /api/articles
     -   `topic`
     -   `created_at`
     -   `votes`
-    -   `comment_count` which is the total count of all the comments with this article_id - you should make use of knex queries in order to achieve this
+    -   `comment_count` which is the total count of all the comments with this article_id - you should make use of knex queries in order to achieve this -->
 
 #### Should accept queries
 
