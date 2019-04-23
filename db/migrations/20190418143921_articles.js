@@ -11,7 +11,7 @@ exports.up = function(knex, Promise) {
 			.foreign('author')
 			.references('username')
 			.inTable('users');
-		articles.date('created_at').defaultTo(knex.fn.now(0));
+		articles.timestamp('created_at', { precision: 6 }).defaultTo(knex.fn.now());
 	});
 };
 

@@ -19,9 +19,7 @@ const dateStamp = stamp => {
 exports.formatArticleData = data => {
 	return data.map(obj => {
 		newObj = { ...obj };
-		if (obj['created_at']) {
-			newObj['created_at'] = dateStamp(obj['created_at']);
-		}
+		newObj['created_at'] = new Date(obj['created_at']);
 		return newObj;
 	});
 };
@@ -42,7 +40,7 @@ exports.commentRef = (insertedArts, comm) => {
 exports.formatCommentsData = (comments, ref) => {
 	let formattedComment = comments.reduce((newArray, comment) => {
 		let obj = { ...comment };
-		obj['created_at'] = dateStamp(obj['created_at']);
+		obj['created_at'] = new Date(obj['created_at']);
 		obj['author'] = obj['created_by'];
 		delete obj['created_by'];
 		obj['article_id'] = ref[comment['belongs_to']];

@@ -6,7 +6,7 @@ exports.up = function(knex, Promise) {
 		comments.integer('article_id');
 		comments.foreign('article_id').references('articles.article_id');
 		comments.integer('votes').defaultTo(0);
-		comments.date('created_at').defaultTo(knex.fn.now(0));
+		comments.timestamp('created_at', { precision: 6 }).defaultTo(knex.fn.now());
 		comments.text('body');
 	});
 };
