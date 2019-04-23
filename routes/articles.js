@@ -1,11 +1,8 @@
 const articlesRouter = require('express').Router();
-const { methodNotAllowed, routeNotFound, handle500 } = require('../errors');
+const { methodNotAllowed, routeNotFound, handle500, missingId } = require('../errors');
+const { sendArticleById, sendAllArticles } = require('../controllers/articlesController');
 
-articlesRouter.route('/').get((req, res) => {
-	res.send({ msg: 'articles GET route' })
-		.post(methodNotAllowed)
-		.delete(methodNotAllowed)
-		.patch(methodNotAllowed);
-});
+articlesRouter.get('/:article_id', sendArticleById);
+articlesRouter.all('/', sendAllArticles);
 
 module.exports = articlesRouter;

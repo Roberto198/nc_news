@@ -4,6 +4,7 @@ const topicsRouter = require('./topics');
 const articlesRouter = require('./articles');
 
 apiRouter.use('/articles', articlesRouter);
+apiRouter.use('/topics', topicsRouter);
 apiRouter
 	.route('/')
 	.get((req, res) => res.send({ ok: true }))
