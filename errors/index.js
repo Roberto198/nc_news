@@ -9,3 +9,7 @@ exports.methodNotAllowed = (req, res) => {
 exports.handle500 = (err, req, res, next) => {
 	res.status(500).send({ msg: 'Internal Server Error' });
 };
+
+exports.missingId = (err, req, res, next) => {
+	res.status(400).send({ msg: 'Missing Id' });
+};
