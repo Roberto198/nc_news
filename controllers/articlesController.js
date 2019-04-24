@@ -23,7 +23,7 @@ exports.sendArticleById = (req, res, next) => {
 			} else res.status(200).send(article);
 		})
 		.catch(err => {
-			next(err);
+			next(err, article_id);
 		});
 };
 
@@ -32,7 +32,9 @@ exports.sendArticlesComments = (req, res, next) => {
 	let { article_id } = req.params;
 	selectArticlesComments(article_id, query)
 		.then(comments => {
-			res.status(200).send(comments);
+			if (!comments) {
+				return Promise.reject({ status: 400, msg: 'Invalid article ID' });
+			} else res.status(200).send({ comments });
 		})
 		.catch(next);
 };

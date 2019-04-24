@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 var chai = require('chai');
 chai.use(require('chai-datetime'));
-const { createUserRef, formatArticleData, commentRef, formatCommentsData } = require('../utils/utils');
+const { createUserRef, formatArticleData, commentRef, formatCommentsData, formatComment } = require('../utils/utils');
 
 describe('createUserRef():', () => {
 	data = [
@@ -161,5 +161,26 @@ describe('formatCommentsData():', () => {
 		expect(Object.keys(testResult[1])).to.have.members(['body', 'votes', 'created_at', 'author', 'article_id']);
 		expect(testResult[0].created_at).to.eql(new Date(1468087638932));
 		expect(testResult[1].created_at).to.eql(new Date(1478813209256));
+	});
+});
+
+describe('formatComment():', () => {
+	const comment = {
+		username: 'johnsmith',
+		body: 'comment',
+	};
+	const params = { article_id: '12' };
+	it('will create a new obj', () => {
+		expect(formatComment(comment, params)).to.not.equal(comment);
+	});
+	it('will have correct props for inserting into db', () => {
+		expect(formatComment(comment, params)).to.have.all.keys('author', 'article_id', 'body');
+	});
+	it('will take the values from the objects passed as arguments', () => {
+		expect(formatComment(comment, params)).to.eql({
+			author: 'johnsmith',
+			body: 'comment',
+			article_id: '12',
+		});
 	});
 });

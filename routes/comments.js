@@ -1,5 +1,5 @@
 const commentsRouter = require('express').Router();
-const { removeComment } = require('../controllers/commentsController');
+const { removeComment, uploadComment } = require('../controllers/commentsController');
 
 commentsRouter.delete('/:comment_id', removeComment);
 

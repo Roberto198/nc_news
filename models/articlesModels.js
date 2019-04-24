@@ -41,8 +41,7 @@ exports.selectArticlesComments = (id, query) => {
 	return connection('comments')
 		.select('comment_id', 'votes', 'created_at', 'author', 'body')
 		.where('comments.article_id', '=', id)
-		.orderBy(query.sort_by || 'created_at', query.order || 'desc')
-		.catch(err => console.log(err));
+		.orderBy(query.sort_by || 'created_at', query.order || 'desc');
 };
 
 exports.patchArticle = (vote, id) => {
