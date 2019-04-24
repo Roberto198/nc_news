@@ -8,7 +8,7 @@ const connection = require('../db/connection');
 
 const request = supertest(app);
 
-describe('/', () => {
+describe.only('/', () => {
 	beforeEach(() => connection.seed.run());
 	after(() => connection.destroy());
 
@@ -35,7 +35,7 @@ describe('/', () => {
 		});
 	});
 
-	describe.only('/api/articles', () => {
+	describe('/api/articles', () => {
 		it('GET - status 200 - send all articles', () => {
 			return request
 				.get('/api/articles')
@@ -50,7 +50,6 @@ describe('/', () => {
 				.get('/api/articles/1')
 				.expect(200)
 				.then(({ body }) => {
-					console.log(body);
 					expect(body).to.be.an('object');
 					expect(Object.keys(body)).to.have.members([
 						'article_id',
@@ -60,14 +59,67 @@ describe('/', () => {
 						'topic',
 						'author',
 						'created_at',
+						'comment_count',
 					]);
 				});
 		});
-		it('GET- status 200 - ', () => {});
+		it('GET- status 404 - article ID does not exists', () => {
+			return request
+				.get('/api/articles/999')
+				.expect(404)
+				.then(body => {
+					expect(body.body.msg).to.equal('Article not found by this ID');
+				});
+		});
+		it('GET - status 400 - bad request, invalid article Id', () => {
+			return request
+				.get('/api/articles/invalidId')
+				.expect(400)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('Invalid ID type');
+				});
+		});
+		it('PATCH - 201 - updates an articles votes', () => {
+			return request
+				.patch('/api/articles/2')
+				.send({ inc_votes: 10 })
+				.expect(201)
+				.then(({ body }) => {
+					expect(body).to.be.an('object');
+					expect(body.updated_article).to.be.an('object');
+				});
+		});
+		it('PATCH - 404 - patching to valid id which doesnt exist', () => {
+			return request
+				.patch('/api/articles/999')
+				.send({ inc_votes: 10 })
+				.expect(404)
+				.then(body => {
+					expect(body.body.msg).to.equal('Article not found by this ID');
+				});
+		});
+		it('PATCH - 400 - patching to invalid article id.', () => {
+			return request
+				.patch('/api/articles/invalidId')
+				.send({ inc_votes: 10 })
+				.expect(400)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('Invalid ID type');
+				});
+		});
+		it('PATCH - 400 - sending incorrect body, model will not patch anything and still return', () => {
+			return request
+				.patch('/api/articles/1')
+				.send({ banana: 10 })
+				.expect(400)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('Incorrect body. No vote found.');
+				});
+		});
 	});
 
 	describe('/api/comments', () => {
-		it('', () => {});
+		it('GET - 200 - reponds with ', () => {});
 	});
 
 	describe('/api/topics', () => {

@@ -18,9 +18,13 @@ exports.sendArticleById = (req, res, next) => {
 	let { article_id } = req.params;
 	selectArticleById(article_id)
 		.then(([article]) => {
-			res.status(200).send(article);
+			if (!article) {
+				return Promise.reject({ status: 404, msg: 'Article not found by this ID' });
+			} else res.status(200).send(article);
 		})
-		.catch(next);
+		.catch(err => {
+			next(err);
+		});
 };
 
 exports.sendArticlesComments = (req, res, next) => {
@@ -34,7 +38,13 @@ exports.sendArticlesComments = (req, res, next) => {
 };
 
 exports.updateArticle = (req, res, next) => {
-	patchArticle(req.body.inc_votes, req.params.article_id).then(article => {
-		res.status(200).send({ updated_article: article });
-	});
+	patchArticle(req.body.inc_votes, req.params.article_id)
+		.then(([article]) => {
+			if (!article) {
+				return Promise.reject({ status: 404, msg: 'Article not found by this ID' });
+			} else res.status(201).send({ updated_article: article });
+		})
+		.catch(err => {
+			next(err);
+		});
 };
