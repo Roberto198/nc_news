@@ -225,7 +225,7 @@ GET /api/articles/:article_id/comments
 POST /api/articles/:article_id/comments
 ```
 
-#### Request body accepts
+<!-- #### Request body accepts
 
 -   an object with the following properties:
     -   `username`
@@ -239,8 +239,8 @@ POST /api/articles/:article_id/comments
 
 ```http
 PATCH /api/comments/:comment_id
-```
-
+``` -->
+<!--
 #### Request body accepts
 
 -   an object in the form `{ inc_votes: newVote }`
@@ -257,8 +257,8 @@ PATCH /api/comments/:comment_id
 
 -   the updated comment
 
----
-
+--- -->
+<!--
 ```http
 DELETE /api/comments/:comment_id
 ```
@@ -269,7 +269,7 @@ DELETE /api/comments/:comment_id
 
 #### Responds with
 
--   status 204 and no content
+-   status 204 and no content -->
 
 ---
 

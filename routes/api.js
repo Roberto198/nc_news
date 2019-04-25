@@ -6,13 +6,15 @@ const articlesRouter = require('./articles');
 const usersRouter = require('./users');
 const commentsRouter = require('./comments');
 
+const { splashPage } = require('../controllers/splashPage');
+
 apiRouter.use('/articles', articlesRouter);
 apiRouter.use('/topics', topicsRouter);
 apiRouter.use('/users', usersRouter);
 apiRouter.use('/comments', commentsRouter);
 apiRouter
 	.route('/')
-	.get((req, res) => res.send({ ok: true }))
+	.get(splashPage)
 	.all(methodNotAllowed);
 
 apiRouter.all('/*', routeNotFound);

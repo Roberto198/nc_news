@@ -7,7 +7,9 @@ const app = express();
 app.use(express.json());
 
 app.use('/api', apiRouter);
-app.all('/*', routeNotFound);
+app.all('/*', (req, res, next) => {
+	res.status(200).send({ 'Welcome to NC News': 'Please use /api for all routes' });
+});
 
 app.use(writtenErrors);
 app.use(sqlErrors);

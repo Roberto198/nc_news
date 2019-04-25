@@ -1,5 +1,5 @@
 const articlesRouter = require('express').Router();
-const { methodNotAllowed, routeNotFound, handle500, missingId } = require('../errors');
+const { methodNotAllowed } = require('../errors');
 const {
 	sendArticleById,
 	sendAllArticles,
@@ -11,10 +11,18 @@ const { uploadComment } = require('../controllers/commentsController');
 articlesRouter
 	.route('/:article_id/comments')
 	.get(sendArticlesComments)
-	.post(uploadComment);
+	.post(uploadComment)
+	.all(methodNotAllowed);
 
-articlesRouter.patch('/:article_id', updateArticle);
-articlesRouter.get('/:article_id', sendArticleById);
-articlesRouter.all('/', sendAllArticles);
+articlesRouter
+	.route('/:article_id')
+	.patch(updateArticle)
+	.get(sendArticleById)
+	.all(methodNotAllowed);
+
+articlesRouter
+	.route('/')
+	.get(sendAllArticles)
+	.all(methodNotAllowed);
 
 module.exports = articlesRouter;

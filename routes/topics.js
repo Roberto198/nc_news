@@ -1,7 +1,10 @@
 const topicsRouter = require('express').Router();
-const { methodNotAllowed, routeNotFound, handle500, missingId } = require('../errors');
+const { methodNotAllowed } = require('../errors');
 const { sendAllTopics } = require('../controllers/topicsController');
 
-topicsRouter.get('/', sendAllTopics);
+topicsRouter
+	.route('/')
+	.get(sendAllTopics)
+	.all(methodNotAllowed);
 
 module.exports = topicsRouter;

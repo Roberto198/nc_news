@@ -12,12 +12,12 @@ describe.only('/', () => {
 	beforeEach(() => connection.seed.run());
 	after(() => connection.destroy());
 
-	it('ALL - status 404 - wrong filepath', () => {
+	it('ALL - 200 - wrong filepath', () => {
 		return request
 			.get('/wrongpath')
-			.expect(404)
+			.expect(200)
 			.then(({ body }) => {
-				expect(body.msg).to.equal('Route Not Found');
+				expect(body).to.eql({ 'Welcome to NC News': 'Please use /api for all routes' });
 			});
 	});
 
@@ -319,7 +319,7 @@ describe.only('/', () => {
 		});
 	});
 
-	describe('/api/topics', () => {
+	describe.only('/api/topics', () => {
 		it('GET - status 200 - responds with all topics', () => {
 			return request
 				.get('/api/topics')
@@ -328,6 +328,14 @@ describe.only('/', () => {
 					expect(body.topics).to.be.an('array');
 					expect(body.topics[0]).to.have.property('slug');
 					expect(body.topics[0]).to.have.property('description');
+				});
+		});
+		it('GET - status 405 - when trying to patch to topics', () => {
+			return request
+				.patch('/api/topics')
+				.expect(405)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('Method Not Allowed');
 				});
 		});
 	});
