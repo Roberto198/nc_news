@@ -1,4 +1,5 @@
 const connection = require('../db/connection');
+const { sendAllTopics } = require('../models/topicsModels');
 
 exports.selectAllArticles = ({ author, topic, sort_by, order }) => {
 	return connection

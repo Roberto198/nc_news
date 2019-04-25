@@ -63,7 +63,7 @@ describe.only('/', () => {
 					]);
 				});
 		});
-		it('GET - 200 - returns articles with queries', () => {
+		it('GET - 200 - returns articles with queries (author)', () => {
 			return request
 				.get('/api/articles?author=rogersop')
 				.expect(200)
@@ -72,13 +72,75 @@ describe.only('/', () => {
 					expect(body.articles[0].author).to.equal('rogersop');
 				});
 		});
-		it('GET - 200 - returns articles with queries', () => {
+		it('GET - 200 - returns articles with queries (topics)', () => {
 			return request
 				.get('/api/articles?topic=cats')
 				.expect(200)
 				.then(({ body }) => {
 					expect(body.articles).to.be.an('array');
 					expect(body.articles[0].topic).to.equal('cats');
+				});
+		});
+		it.only('GET - 404 - returns articles with queries (incorrect topics)', () => {
+			return request
+				.get('/api/articles?topic=invalidTopic')
+				.expect(404)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('No such topic found');
+				});
+		});
+		it.only('GET - 404 - returns articles with queries (incorrect author)', () => {
+			return request
+				.get('/api/articles?author=invalidAuthor')
+				.expect(404)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('No such author found');
+				});
+		});
+		it('GET - 200 - returns articles with queries (order)', () => {
+			return request
+				.get('/api/articles?order=asc')
+				.expect(200)
+				.then(({ body }) => {
+					expect(body.articles).to.be.an('array');
+					expect(body.articles[0].article_id).to.equal(9);
+				});
+		});
+		it('GET - 200 - returns articles with queries (sort_by author, default = desc)', () => {
+			return request
+				.get('/api/articles?sort_by=author')
+				.expect(200)
+				.then(({ body }) => {
+					expect(body.articles).to.be.an('array');
+					expect(body.articles[0].author).to.equal('rogersop');
+				});
+		});
+		it('GET - 200 - returns articles with queries (sort_by author, query = asc)', () => {
+			return request
+				.get('/api/articles?sort_by=author&order=asc')
+				.expect(200)
+				.then(({ body }) => {
+					expect(body.articles).to.be.an('array');
+					expect(body.articles[0].author).to.equal('butter_bridge');
+				});
+		});
+		it('GET - 200 - returns articles with queries (sort_by id, auto order by desc)', () => {
+			return request
+				.get('/api/articles?sort_by=article_id')
+				.expect(200)
+				.then(({ body }) => {
+					expect(body.articles).to.be.an('array');
+					expect(body.articles[0].article_id).to.equal(9);
+				});
+		});
+		it('GET - 200 - returns articles with queries (sort_by id, query sort by asc)', () => {
+			return request
+				.get('/api/articles?sort_by=article_id&order=asc')
+				.expect(200)
+				.then(({ body }) => {
+					console.log(body.articles[0]);
+					expect(body.articles).to.be.an('array');
+					expect(body.articles[0].article_id).to.equal(1);
 				});
 		});
 		it('GET - 200 - returns all articles when sent with incorrect query keys', () => {
@@ -141,7 +203,6 @@ describe.only('/', () => {
 					expect(body.body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
 				});
 		});
-
 		it('PATCH - 201 - updates an articles votes (increment)', () => {
 			return request
 				.patch('/api/articles/2')
@@ -319,7 +380,7 @@ describe.only('/', () => {
 		});
 	});
 
-	describe.only('/api/topics', () => {
+	describe('/api/topics', () => {
 		it('GET - status 200 - responds with all topics', () => {
 			return request
 				.get('/api/topics')

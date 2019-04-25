@@ -1,5 +1,8 @@
 const connection = require('../db/connection');
 
-exports.selectAllTopics = () => {
-	return connection.select('*').from('topics');
+exports.selectAllTopics = topic => {
+	return connection
+		.select('*')
+		.from('topics')
+		.where('slug', 'like', topic || '%');
 };

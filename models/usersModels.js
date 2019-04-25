@@ -4,5 +4,5 @@ exports.selectUsers = username => {
 	console.log(username);
 	return connection('users')
 		.select('*')
-		.where('username', username);
+		.where('username', 'like', username || '%');
 };

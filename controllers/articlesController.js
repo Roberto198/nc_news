@@ -4,14 +4,33 @@ const {
 	selectArticlesComments,
 	patchArticle,
 } = require('../models/articlesModels');
+const { selectAllTopics } = require('../models/topicsModels');
+const { selectUsers } = require('../models/usersModels');
 
 exports.sendAllArticles = (req, res, next) => {
 	let query = req.query;
-	selectAllArticles(query)
-		.then(articles => {
-			res.status(200).send({ articles });
+	let { topic, author } = req.query;
+	const checkTopics = selectAllTopics(topic);
+	const sendArticles = selectAllArticles(query);
+	const checkAuthors = selectUsers(author);
+
+	Promise.all([checkTopics, checkAuthors, sendArticles])
+		.then(([topic, author, article]) => {
+			console.log(topic, '<-topic');
+			console.log(author, '<-author');
+			if (topic.length === 0) {
+				return Promise.reject({ status: 404, msg: 'No such topic found' });
+			}
+			if (author.length === 0) {
+				return Promise.reject({ status: 404, msg: 'No such author found' });
+			} else {
+				res.status(200).send({ articles: article });
+			}
 		})
-		.catch(next);
+		.catch(err => {
+			console.log(err);
+			next(err);
+		});
 };
 
 exports.sendArticleById = (req, res, next) => {

@@ -2,3 +2,4 @@ node_modules
 knexfile.js
 .DS_Store
 display_tables.sql
+review_notes.md
