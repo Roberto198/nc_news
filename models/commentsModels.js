@@ -12,9 +12,13 @@ exports.deleteComment = id => {
 
 exports.postComment = (body, params) => {
 	const sqlComment = formatComment(body, params);
-	return connection('comments')
-		.insert(sqlComment)
-		.returning('*');
+	if (sqlComment.author === undefined || sqlComment.body === undefined || params.article_id === undefined) {
+		return Promise.reject({ status: 400, msg: 'Incorrect keys to insert comment (Please use username and body)' });
+	} else {
+		return connection('comments')
+			.insert(sqlComment)
+			.returning('*');
+	}
 };
 
 exports.patchComment = (vote, id) => {

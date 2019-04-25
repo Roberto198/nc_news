@@ -14,7 +14,7 @@ exports.uploadComment = (req, res, next) => {
 	const { body, params } = req;
 	postComment(body, params)
 		.then(comment => {
-			res.status(201).send({ comment });
+			res.status(201).send({ comment: comment[0] });
 		})
 		.catch(err => {
 			next(err);

@@ -50,8 +50,8 @@ describe.only('/', () => {
 				.get('/api/articles/1')
 				.expect(200)
 				.then(({ body }) => {
-					expect(body).to.be.an('object');
-					expect(Object.keys(body)).to.have.members([
+					expect(body.article).to.be.an('object');
+					expect(Object.keys(body.article)).to.have.members([
 						'article_id',
 						'title',
 						'body',
@@ -81,7 +81,7 @@ describe.only('/', () => {
 					expect(body.articles[0].topic).to.equal('cats');
 				});
 		});
-		it.only('GET - 404 - returns articles with queries (incorrect topics)', () => {
+		it('GET - 404 - returns articles with queries (incorrect topics)', () => {
 			return request
 				.get('/api/articles?topic=invalidTopic')
 				.expect(404)
@@ -89,7 +89,7 @@ describe.only('/', () => {
 					expect(body.msg).to.equal('No such topic found');
 				});
 		});
-		it.only('GET - 404 - returns articles with queries (incorrect author)', () => {
+		it('GET - 404 - returns articles with queries (incorrect author)', () => {
 			return request
 				.get('/api/articles?author=invalidAuthor')
 				.expect(404)
@@ -97,7 +97,16 @@ describe.only('/', () => {
 					expect(body.msg).to.equal('No such author found');
 				});
 		});
-		it('GET - 200 - returns articles with queries (order)', () => {
+		it('GET - 200 - returns articles ordered desc by created at', () => {
+			return request
+				.get('/api/articles')
+				.expect(200)
+				.then(({ body }) => {
+					expect(body.articles).to.be.an('array');
+					expect(body.articles[0].article_id).to.equal(1);
+				});
+		});
+		it('GET - 200 - returns articles with queries (order asc)', () => {
 			return request
 				.get('/api/articles?order=asc')
 				.expect(200)
@@ -138,7 +147,6 @@ describe.only('/', () => {
 				.get('/api/articles?sort_by=article_id&order=asc')
 				.expect(200)
 				.then(({ body }) => {
-					console.log(body.articles[0]);
 					expect(body.articles).to.be.an('array');
 					expect(body.articles[0].article_id).to.equal(1);
 				});
@@ -151,13 +159,12 @@ describe.only('/', () => {
 					expect(body.articles).to.be.an('array');
 				});
 		});
-		it('GET - 200 / Empty Array - with incorrect query values', () => {
+		it('GET - 404 - with incorrect query values', () => {
 			return request
 				.get('/api/articles?topic=wrongQueryValue')
-				.expect(200)
+				.expect(404)
 				.then(({ body }) => {
-					expect(body.articles).to.be.an('array');
-					expect(body.articles.length).to.equal(0);
+					expect(body.msg).to.equal('No such topic found');
 				});
 		});
 		it('GET - 404 - article ID does not exist', () => {
@@ -185,14 +192,12 @@ describe.only('/', () => {
 					expect(Object.keys(body)).to.eql(['comments']);
 				});
 		});
-		it('GET - 200 / Empty Aray - get articles comment by id, where id not found', () => {
+		it('GET - 404 - get articles comment by id, where id not found', () => {
 			return request
 				.get('/api/articles/99999/comments')
-				.expect(200)
-				.then(body => {
-					expect(body).to.be.an('object');
-					expect(Object.keys(body.body)).to.eql(['comments']);
-					expect(body.body.comments.length).to.equal(0);
+				.expect(404)
+				.then(({ body }) => {
+					expect(body.msg).to.eql('Article not found');
 				});
 		});
 		it('GET - 400 - get articles comment by id, where id is invalid', () => {
@@ -203,24 +208,31 @@ describe.only('/', () => {
 					expect(body.body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
 				});
 		});
-		it('PATCH - 201 - updates an articles votes (increment)', () => {
+		it('PATCH - 200 - updates an articles votes (increment)', () => {
 			return request
 				.patch('/api/articles/2')
 				.send({ inc_votes: 10 })
-				.expect(201)
+				.expect(200)
 				.then(({ body }) => {
 					expect(body).to.be.an('object');
-					expect(body.updated_article).to.be.an('object');
 				});
 		});
-		it('PATCH - 201 - updates an articles votes (decrement)', () => {
+		it('PATCH - 200 - updates an articles votes (decrement)', () => {
 			return request
 				.patch('/api/articles/2')
 				.send({ inc_votes: -10 })
-				.expect(201)
+				.expect(200)
 				.then(({ body }) => {
 					expect(body).to.be.an('object');
-					expect(body.updated_article).to.be.an('object');
+					expect(body.article).to.be.an('object');
+				});
+		});
+		it('PATCH - 200 - patching an article with no body sent, still returns articles', () => {
+			return request
+				.patch('/api/articles/2')
+				.expect(200)
+				.then(({ body }) => {
+					expect(body.article).to.be.an('object');
 				});
 		});
 		it('PATCH - 404 - patching to valid id which doesnt exist', () => {
@@ -269,7 +281,7 @@ describe.only('/', () => {
 				.expect(201)
 				.then(({ body }) => {
 					expect(body).to.have.keys('comment');
-					expect(body.comment.length).to.equal(1);
+					expect(body.comment).to.be.an('object');
 				});
 		});
 		it('POST - 404 - post comment to valid but not found ID', () => {
@@ -299,13 +311,13 @@ describe.only('/', () => {
 					expect(body.body.msg).to.equal('Please provide a valid username to post.');
 				});
 		});
-		it('POST - 400 - post comment with malformed json keys', () => {
+		it.only('POST - 400 - post comment with malformed json keys', () => {
 			return request
 				.post('/api/articles/1/comments')
 				.send({ banana: 'rogersop', banana: 'sample comment' })
 				.expect(400)
-				.then(body => {
-					expect(body.body.msg).to.equal('Incorrect keys to insert comment (Please use username and body)');
+				.then(({ body }) => {
+					expect(body.msg).to.equal('Incorrect keys to insert comment (Please use username and body)');
 				});
 		});
 		it('DELETE - 204 - removes a comment', () => {

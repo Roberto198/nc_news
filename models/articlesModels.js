@@ -46,22 +46,20 @@ exports.selectArticlesComments = (id, query) => {
 };
 
 exports.patchArticle = (vote, id) => {
-	if (!vote) return Promise.reject({ status: 400, msg: 'Incorrect body. No vote found.' });
-	else
-		return connection
-			.select(
-				'articles.article_id',
-				'articles.title',
-				'articles.votes',
-				'articles.topic',
-				'articles.author',
-				'articles.created_at'
-			)
-			.where('articles.article_id', '=', id)
-			.from('articles')
-			.join('comments', 'articles.article_id', '=', 'comments.article_id')
-			.count('comments.article_id as comment_count')
-			.groupBy('articles.article_id')
-			.increment('votes', vote || 0)
-			.returning('*');
+	return connection
+		.select(
+			'articles.article_id',
+			'articles.title',
+			'articles.votes',
+			'articles.topic',
+			'articles.author',
+			'articles.created_at'
+		)
+		.where('articles.article_id', '=', id)
+		.from('articles')
+		.join('comments', 'articles.article_id', '=', 'comments.article_id')
+		.count('comments.article_id as comment_count')
+		.groupBy('articles.article_id')
+		.increment('votes', vote || 0)
+		.returning('*');
 };

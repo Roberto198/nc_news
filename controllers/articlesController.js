@@ -16,8 +16,6 @@ exports.sendAllArticles = (req, res, next) => {
 
 	Promise.all([checkTopics, checkAuthors, sendArticles])
 		.then(([topic, author, article]) => {
-			console.log(topic, '<-topic');
-			console.log(author, '<-author');
 			if (topic.length === 0) {
 				return Promise.reject({ status: 404, msg: 'No such topic found' });
 			}
@@ -27,10 +25,7 @@ exports.sendAllArticles = (req, res, next) => {
 				res.status(200).send({ articles: article });
 			}
 		})
-		.catch(err => {
-			console.log(err);
-			next(err);
-		});
+		.catch(next);
 };
 
 exports.sendArticleById = (req, res, next) => {
@@ -39,7 +34,7 @@ exports.sendArticleById = (req, res, next) => {
 		.then(([article]) => {
 			if (!article) {
 				return Promise.reject({ status: 404, msg: 'Article not found by this ID' });
-			} else res.status(200).send(article);
+			} else res.status(200).send({ article });
 		})
 		.catch(err => {
 			next(err);
@@ -49,13 +44,21 @@ exports.sendArticleById = (req, res, next) => {
 exports.sendArticlesComments = (req, res, next) => {
 	let { query } = req;
 	let { article_id } = req.params;
-	selectArticlesComments(article_id, query)
-		.then(comments => {
-			if (!comments) {
-				return Promise.reject({ status: 400, msg: 'Invalid article ID' });
-			} else res.status(200).send({ comments });
+	const getComments = selectArticlesComments(article_id, query);
+
+	const articleCheck = selectArticleById(article_id);
+
+	Promise.all([articleCheck, getComments])
+		.then(([article, comments]) => {
+			if (article.length === 0) {
+				return Promise.reject({ status: 404, msg: 'Article not found' });
+			} else {
+				res.status(200).send({ comments });
+			}
 		})
-		.catch(next);
+		.catch(err => {
+			next(err);
+		});
 };
 
 exports.updateArticle = (req, res, next) => {
@@ -63,7 +66,7 @@ exports.updateArticle = (req, res, next) => {
 		.then(([article]) => {
 			if (!article) {
 				return Promise.reject({ status: 404, msg: 'Article not found by this ID' });
-			} else res.status(201).send({ updated_article: article });
+			} else res.status(200).send({ article });
 		})
 		.catch(err => {
 			next(err);
