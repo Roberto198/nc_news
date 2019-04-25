@@ -77,24 +77,26 @@ You should have separate tables for topics, articles, users and comments, and yo
 
 Your server _must_ have the following endpoints:
 
-```http
+<!-- ```http
 GET /api/topics
 
 GET /api/articles
 
-GET /api/articles/:article_id
-PATCH /api/articles/:article_id
+GET /api/articles/:article_id -->
+<!-- PATCH /api/articles/:article_id -->
 
-GET /api/articles/:article_id/comments
+<!-- GET /api/articles/:article_id/comments -->
+
 POST /api/articles/:article_id/comments
 
 PATCH /api/comments/:comment_id
 DELETE /api/comments/:comment_id
 
-GET /api/users/:username
+<!-- GET /api/users/:username -->
 
 GET /api
-```
+
+<!-- ```
 
 ---
 
@@ -121,9 +123,9 @@ _**All of your endpoints should send the below responses in an object, with a ke
 }
 ```
 
----
+--- -->
 
-```http
+<!-- ```http
 GET /api/topics
 ```
 
@@ -133,11 +135,11 @@ GET /api/topics
     -   `slug`
     -   `description`
 
---- -->
-
+--- --> -->
+<!--
 ```http
 GET /api/articles
-```
+``` -->
 
 <!-- #### Responds with
 
@@ -149,7 +151,7 @@ GET /api/articles
     -   `created_at`
     -   `votes`
     -   `comment_count` which is the total count of all the comments with this article_id - you should make use of knex queries in order to achieve this -->
-
+<!--
 #### Should accept queries
 
 -   `author`, which filters the articles by the username value specified in the query
@@ -157,9 +159,9 @@ GET /api/articles
 -   `sort_by`, which sorts the articles by any valid column (defaults to date)
 -   `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
 
----
+--- -->
 
-```http
+<!-- ```http
 GET /api/articles/:article_id
 ```
 
@@ -175,9 +177,9 @@ GET /api/articles/:article_id
     -   `votes`
     -   `comment_count` which is the total count of all the comments with this article_id - you should make use of knex queries in order to achieve this
 
----
+--- -->
 
-```http
+<!-- ```http
 PATCH /api/articles/:article_id
 ```
 
@@ -217,7 +219,7 @@ GET /api/articles/:article_id/comments
 -   `sort_by`, which sorts the articles by any valid column (defaults to created_at)
 -   `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
 
----
+ -->
 
 ```http
 POST /api/articles/:article_id/comments
@@ -271,7 +273,7 @@ DELETE /api/comments/:comment_id
 
 ---
 
-```http
+<!-- ```http
 GET /api/users/:username
 ```
 
@@ -280,7 +282,7 @@ GET /api/users/:username
 -   a user object which should have the following properties:
     -   `username`
     -   `avatar_url`
-    -   `name`
+    -   `name` -->
 
 # STOP!
 

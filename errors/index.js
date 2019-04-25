@@ -20,7 +20,15 @@ exports.writtenErrors = (err, req, res, next) => {
 };
 
 exports.sqlErrors = (err, req, res, next) => {
-	if (err.code === '22P02') {
-		res.status(400).send({ msg: 'Invalid ID type' });
+	if (err.detail === 'Key (author)=(inavlidUsername) is not present in table "users".') {
+		res.status(400).send({ msg: 'Please provide a valid username to post.' });
+	} else if (err.code === '22P02') {
+		res.status(400).send({ msg: 'Values must be an integer: Article_id, Inc_votes, comment_id' });
+	} else if (err.code === '23503') {
+		res.status(404).send({ msg: 'Article not found by this ID' });
+	} else if (err.code === '42703') {
+		res.status(400).send({ msg: 'Incorrect keys to insert comment (Please use username and body)' });
 	} else next(err);
 };
+
+('Key (author)=(inavlidUsername) is not present in table "users".');

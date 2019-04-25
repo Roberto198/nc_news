@@ -22,10 +22,10 @@ describe.only('/', () => {
 	});
 
 	describe('/api', () => {
-		it('GET - status:200 - with all correct', () => {
+		it('GET - 200 - with all correct', () => {
 			return request.get('/api').expect(200);
 		});
-		it('ALL - status 404 - incorrect path', () => {
+		it('ALL - 404 - incorrect path', () => {
 			return request
 				.get('/api/23v3cw')
 				.expect(404)
@@ -114,7 +114,7 @@ describe.only('/', () => {
 					expect(body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
 				});
 		});
-		it.only('GET - 200 - get articles comments by id', () => {
+		it('GET - 200 - get articles comments by id', () => {
 			return request
 				.get('/api/articles/1/comments')
 				.expect(200)
@@ -128,7 +128,6 @@ describe.only('/', () => {
 				.get('/api/articles/99999/comments')
 				.expect(200)
 				.then(body => {
-					console.log(body.body);
 					expect(body).to.be.an('object');
 					expect(Object.keys(body.body)).to.eql(['comments']);
 					expect(body.body.comments.length).to.equal(0);
@@ -142,15 +141,7 @@ describe.only('/', () => {
 					expect(body.body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
 				});
 		});
-		it('POST - 201 - succesfully post comment', () => {
-			return request
-				.post('/api/articles/1/comments')
-				.send({ username: 'jessjelly', body: 'sample comment' })
-				.expect(201)
-				.then(comment => {
-					console.log(comment);
-				});
-		});
+
 		it('PATCH - 201 - updates an articles votes (increment)', () => {
 			return request
 				.patch('/api/articles/2')
@@ -210,6 +201,52 @@ describe.only('/', () => {
 	});
 
 	describe('/api/comments', () => {
+		it('POST - 201 - succesfully post comment', () => {
+			return request
+				.post('/api/articles/1/comments')
+				.send({ username: 'rogersop', body: 'sample comment' })
+				.expect(201)
+				.then(({ body }) => {
+					expect(body).to.have.keys('comment');
+					expect(body.comment.length).to.equal(1);
+				});
+		});
+		it('POST - 404 - post comment to valid but not found ID', () => {
+			return request
+				.post('/api/articles/99999/comments')
+				.send({ username: 'rogersop', body: 'sample comment' })
+				.expect(404)
+				.then(body => {
+					expect(body.body.msg).to.equal('Article not found by this ID');
+				});
+		});
+		it('POST - 400 - post comment to invalid article ID', () => {
+			return request
+				.post('/api/articles/invalidId/comments')
+				.send({ username: 'rogersop', body: 'sample comment' })
+				.expect(400)
+				.then(body => {
+					expect(body.body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
+				});
+		});
+		it('POST - 400 - post comment with invalid username in body', () => {
+			return request
+				.post('/api/articles/1/comments')
+				.send({ username: 'inavlidUsername', body: 'sample comment' })
+				.expect(400)
+				.then(body => {
+					expect(body.body.msg).to.equal('Please provide a valid username to post.');
+				});
+		});
+		it('POST - 400 - post comment with malformed json keys', () => {
+			return request
+				.post('/api/articles/1/comments')
+				.send({ banana: 'rogersop', banana: 'sample comment' })
+				.expect(400)
+				.then(body => {
+					expect(body.body.msg).to.equal('Incorrect keys to insert comment (Please use username and body)');
+				});
+		});
 		it('DELETE - 204 - removes a comment', () => {
 			return request
 				.delete('/api/comments/10')
@@ -223,7 +260,7 @@ describe.only('/', () => {
 				.delete('/api/comments/99999')
 				.expect(404)
 				.then(({ body }) => {
-					expect(Object.keys(body)).to.have.lengthOf(0);
+					expect(body.msg).to.equal('Error: comment not found with this ID');
 				});
 		});
 		it('DELETE - 400 - invalid comment id supplied', () => {
@@ -232,6 +269,52 @@ describe.only('/', () => {
 				.expect(400)
 				.then(({ body }) => {
 					expect(body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
+				});
+		});
+		it('PATCH - 201 - increment a comment vote', () => {
+			return request
+				.patch('/api/comments/1')
+				.send({ inc_votes: 10 })
+				.expect(201)
+				.then(({ body }) => {
+					expect(body).to.be.an('object');
+					expect(body.updated_comment).to.be.an('object');
+				});
+		});
+		it('PATCH - 404 - increment a comment vote, comment id not found ', () => {
+			return request
+				.patch('/api/comments/9999')
+				.send({ inc_votes: 10 })
+				.expect(404)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('Error: Comment not found with this ID');
+				});
+		});
+		it('PATCH - 400 - increment a comment vote, with invalid comment ID ', () => {
+			return request
+				.patch('/api/comments/invalidId')
+				.send({ inc_votes: 10 })
+				.expect(400)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
+				});
+		});
+		it('PATCH - 400 - increment a comment vote, with malformed body (incorrect vote): ', () => {
+			return request
+				.patch('/api/comments/1')
+				.send({ inc_votes: 'banana' })
+				.expect(400)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
+				});
+		});
+		it('PATCH - 400 - increment a comment vote, with malformed body (incorrect key): ', () => {
+			return request
+				.patch('/api/comments/1')
+				.send({ invalidKey: 10 })
+				.expect(400)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('Incorrect request. No vote found.');
 				});
 		});
 	});

@@ -23,7 +23,7 @@ exports.sendArticleById = (req, res, next) => {
 			} else res.status(200).send(article);
 		})
 		.catch(err => {
-			next(err, article_id);
+			next(err);
 		});
 };
 
