@@ -13,6 +13,25 @@ exports.splashPage = (req, res, next) => {
 				'to sort by a column:': '?sort_by=',
 				'To change order from descending': '?order=asc',
 			},
+			'To see the comments for an article:': 'use api/articles/:article_id/comments',
+			'To increment the vote on an article':
+				'Send patch request to api/articles/:article_id containing inc_votes key in the body',
+		},
+		Comments: {
+			'To post a comment':
+				'send a post request to /api/articles/:article_id/comments, containing keys of user and body',
+			'To increment the vote on a comment':
+				'send a patch request to api/comments/:comment_id, containing inc_votes key in the body ',
+			'To delete a comment': 'send a delete request to api/comments/comment_id',
+			'To filter and/or sort comments': {
+				'Filter by author:': '?author=',
+				'to sort by a column:': '?sort_by=',
+				'To change order from descending': '?order=asc',
+			},
+		},
+		Users: {
+			'To see all users': 'use api/users',
+			'To see an indevidual user': 'use api/users/:user_id',
 		},
 	});
 };

@@ -15,9 +15,9 @@ describe('/', () => {
 	it('ALL - 200 - wrong filepath', () => {
 		return request
 			.get('/wrongpath')
-			.expect(200)
+			.expect(404)
 			.then(({ body }) => {
-				expect(body).to.eql({ 'Welcome to NC News': 'Please use /api for all routes' });
+				expect(body.msg).to.eql('Route Not Found');
 			});
 	});
 
