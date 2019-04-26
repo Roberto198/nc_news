@@ -40,7 +40,7 @@ describe('createUserRef():', () => {
 });
 
 describe('formatArticleData()', () => {
-	let smallData = [
+	const smallData = [
 		{
 			title: 'Running a Node App',
 			topic: 'coding',
@@ -51,7 +51,7 @@ describe('formatArticleData()', () => {
 		},
 	];
 
-	let biggerData = [
+	const biggerData = [
 		{
 			title: 'Running a Node App',
 			topic: 'coding',
@@ -71,12 +71,12 @@ describe('formatArticleData()', () => {
 	];
 
 	it('will convert the timestamp in an object to Date notation:', () => {
-		let testResult = formatArticleData(smallData);
+		const testResult = formatArticleData(smallData);
 		expect(testResult[0].created_at).to.equalDate(new Date(1471522072389));
 	});
 
 	it('will work for an array of objects:', () => {
-		let testResult = formatArticleData(biggerData);
+		const testResult = formatArticleData(biggerData);
 		expect(testResult[0].created_at).to.equalDate(new Date(1471522072389));
 		expect(testResult[1].created_at).to.equalDate(new Date(1500584273256));
 	});
@@ -147,16 +147,16 @@ describe('formatCommentsData():', () => {
 		expect(formatCommentsData(comment, refObj)).to.not.eql(comment);
 	});
 	it("will change 'created_by' to 'author':", () => {
-		let x = formatCommentsData(comment, refObj);
+		const x = formatCommentsData(comment, refObj);
 		expect(x[0]).to.have.property('author');
 	});
 	it('will change belongs to to an article id', () => {
-		let x = formatCommentsData(comment, refObj);
+		const x = formatCommentsData(comment, refObj);
 		expect(x[0]).to.have.property('article_id');
 		expect(x[0].article_id).to.be.a('number');
 	});
 	it('will work on a larger array.', () => {
-		let testResult = formatCommentsData(twoComments, refObj);
+		const testResult = formatCommentsData(twoComments, refObj);
 		expect(Object.keys(testResult[0])).to.have.members(['body', 'votes', 'created_at', 'author', 'article_id']);
 		expect(Object.keys(testResult[1])).to.have.members(['body', 'votes', 'created_at', 'author', 'article_id']);
 		expect(testResult[0].created_at).to.eql(new Date(1468087638932));

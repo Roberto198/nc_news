@@ -1,3 +1,5 @@
+//PAGE STILL UNDER EDIT
+
 exports.splashPage = (req, res, next) => {
 	res.status(200).send({
 		'welcomt to the NC News API': 'Please use the folling woutes and queries:',

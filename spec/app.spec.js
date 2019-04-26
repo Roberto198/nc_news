@@ -8,7 +8,7 @@ const connection = require('../db/connection');
 
 const request = supertest(app);
 
-describe.only('/', () => {
+describe('/', () => {
 	beforeEach(() => connection.seed.run());
 	after(() => connection.destroy());
 
@@ -257,9 +257,10 @@ describe.only('/', () => {
 			return request
 				.patch('/api/articles/1')
 				.send({ banana: 10 })
-				.expect(400)
+				.expect(200)
 				.then(({ body }) => {
-					expect(body.msg).to.equal('Incorrect body. No vote found.');
+					expect(body).to.be.an('object');
+					expect(body.article).to.be.an('object');
 				});
 		});
 		it('PATCH - 400 - sending incorrect value in req.body', () => {
@@ -311,7 +312,7 @@ describe.only('/', () => {
 					expect(body.body.msg).to.equal('Please provide a valid username to post.');
 				});
 		});
-		it.only('POST - 400 - post comment with malformed json keys', () => {
+		it('POST - 400 - post comment with malformed json keys', () => {
 			return request
 				.post('/api/articles/1/comments')
 				.send({ banana: 'rogersop', banana: 'sample comment' })
@@ -344,14 +345,14 @@ describe.only('/', () => {
 					expect(body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
 				});
 		});
-		it('PATCH - 201 - increment a comment vote', () => {
+		it('PATCH - 200 - increment a comment vote', () => {
 			return request
 				.patch('/api/comments/1')
 				.send({ inc_votes: 10 })
-				.expect(201)
+				.expect(200)
 				.then(({ body }) => {
 					expect(body).to.be.an('object');
-					expect(body.updated_comment).to.be.an('object');
+					expect(body.comment).to.be.an('object');
 				});
 		});
 		it('PATCH - 404 - increment a comment vote, comment id not found ', () => {
@@ -381,13 +382,21 @@ describe.only('/', () => {
 					expect(body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
 				});
 		});
-		it('PATCH - 400 - increment a comment vote, with malformed body (incorrect key): ', () => {
+		it('PATCH - 200 - increment a comment vote, with malformed body (incorrect key): ', () => {
 			return request
 				.patch('/api/comments/1')
 				.send({ invalidKey: 10 })
-				.expect(400)
+				.expect(200)
 				.then(({ body }) => {
-					expect(body.msg).to.equal('Incorrect request. No vote found.');
+					expect(body.comment).to.be.an('object');
+					expect(body.comment).to.have.keys([
+						'comment_id',
+						'author',
+						'article_id',
+						'votes',
+						'created_at',
+						'body',
+					]);
 				});
 		});
 	});
@@ -409,6 +418,25 @@ describe.only('/', () => {
 				.expect(405)
 				.then(({ body }) => {
 					expect(body.msg).to.equal('Method Not Allowed');
+				});
+		});
+	});
+	describe('/users', () => {
+		it('will find a user by id', () => {
+			return request
+				.get('/api/users/butter_bridge')
+				.expect(200)
+				.then(({ body }) => {
+					expect(body).to.be.an('object');
+					expect(body).to.have.keys(['username', 'avatar_url', 'name']);
+				});
+		});
+		it('will return a 404 when user not found', () => {
+			return request
+				.get('/api/users/invalidUsername')
+				.expect(404)
+				.then(({ body }) => {
+					expect(body.msg).to.equal('User not found');
 				});
 		});
 	});

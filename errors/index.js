@@ -31,5 +31,3 @@ exports.sqlErrors = (err, req, res, next) => {
 		res.status(400).send({ msg: 'Incorrect keys to insert comment (Please use username and body)' });
 	} else next(err);
 };
-
-('Key (author)=(inavlidUsername) is not present in table "users".');
