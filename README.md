@@ -283,7 +283,7 @@ GET /api/users/:username
     -   `username`
     -   `avatar_url`
     -   `name` -->
-
+<!--
 # STOP!
 
 If you have reached this point, let someone on the teaching team know. One of us will be able to take a look at your code and give you some feedback. While we are looking at your code, you can continue with the following:
@@ -300,7 +300,7 @@ GET /api
 
 -   JSON describing all the available endpoints on your API
 
----
+--- -->
 
 ### Step 3 - Hosting
 

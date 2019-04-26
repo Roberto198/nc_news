@@ -42,10 +42,10 @@ exports.sendArticleById = (req, res, next) => {
 };
 
 exports.sendArticlesComments = (req, res, next) => {
-	const { query } = req;
+	const { query, limit, p } = req;
 	const { article_id } = req.params;
 	const checkArticles = selectArticleById(article_id);
-	const getComments = selectArticlesComments(article_id, query);
+	const getComments = selectArticlesComments(article_id, query, limit, p);
 
 	Promise.all([checkArticles, getComments])
 		.then(([article, comments]) => {

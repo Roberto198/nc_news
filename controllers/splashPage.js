@@ -16,6 +16,8 @@ exports.splashPage = (req, res, next) => {
 			'To see the comments for an article:': 'use api/articles/:article_id/comments',
 			'To increment the vote on an article':
 				'Send patch request to api/articles/:article_id containing inc_votes key in the body',
+			'pages are limited to 10 articles per page to change page and page size use':
+				'page size -> ?limit=, page to view -> ?p=',
 		},
 		Comments: {
 			'To post a comment':

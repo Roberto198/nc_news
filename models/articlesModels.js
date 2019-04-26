@@ -45,10 +45,17 @@ exports.selectArticleById = id => {
 };
 
 exports.selectArticlesComments = (id, query) => {
+	const offset = query.limit * (query.p - 1);
+	console.log(query.limit);
+	console.log(query.p);
+	console.log(offset);
+
 	return connection('comments')
 		.select('comment_id', 'votes', 'created_at', 'author', 'body')
 		.where('comments.article_id', '=', id)
-		.orderBy(query.sort_by || 'created_at', query.order || 'desc');
+		.orderBy(query.sort_by || 'created_at', query.order || 'desc')
+		.limit(query.limit || 10)
+		.offset(offset || 0);
 };
 
 exports.patchArticle = (vote, id) => {
