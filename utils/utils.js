@@ -24,7 +24,7 @@ exports.commentRef = (insertedArts, comm) => {
 
 exports.formatCommentsData = (comments, ref) => {
 	return comments.reduce((newArray, comment) => {
-		let obj = {
+		const obj = {
 			body: comment.body,
 			author: comment.created_by,
 			article_id: ref[comment['belongs_to']],

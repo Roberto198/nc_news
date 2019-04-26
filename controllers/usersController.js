@@ -1,7 +1,7 @@
 const { selectUsers } = require('../models/usersModels');
 
 exports.sendUsers = (req, res, next) => {
-	let { username } = req.params;
+	const { username } = req.params;
 
 	selectUsers(username)
 		.then(user => {
