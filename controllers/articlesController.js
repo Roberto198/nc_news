@@ -16,10 +16,10 @@ exports.sendAllArticles = (req, res, next) => {
 
 	Promise.all([checkTopics, checkAuthors, sendArticles])
 		.then(([topic, author, article]) => {
-			if (topic.length === 0) {
+			if (topic.length === 0 && req.query.topic) {
 				return Promise.reject({ status: 404, msg: 'No such topic found' });
 			}
-			if (author.length === 0) {
+			if (author.length === 0 && req.query.author) {
 				return Promise.reject({ status: 404, msg: 'No such author found' });
 			} else {
 				res.status(200).send({ articles: article });

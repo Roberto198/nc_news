@@ -1,7 +1,9 @@
 const connection = require('../db/connection');
 const { sendAllTopics } = require('../models/topicsModels');
 
-exports.selectAllArticles = ({ author, topic, sort_by, order }) => {
+exports.selectAllArticles = ({ author, topic, sort_by, order, limit, p }) => {
+	const offset = limit * (p - 1);
+
 	return connection
 		.select(
 			'articles.article_id',
@@ -14,11 +16,15 @@ exports.selectAllArticles = ({ author, topic, sort_by, order }) => {
 		.where('articles.author', 'like', author || '%')
 		.where('articles.topic', 'like', topic || '%')
 		.from('articles')
+		.limit(limit || 10)
+		.offset(offset || 0)
 		.join('comments', 'articles.article_id', '=', 'comments.article_id')
 		.count('comments.article_id as comment_count')
 		.groupBy('articles.article_id')
 		.orderBy(sort_by || 'created_at', order || 'desc');
 };
+
+//
 
 exports.selectArticleById = id => {
 	return connection
