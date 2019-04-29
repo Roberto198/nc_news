@@ -272,7 +272,7 @@ describe('/', () => {
 					expect(body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
 				});
 		});
-		it.only('POST - 200 - post an article correctly', () => {
+		it.only('POST - 201 - post an article correctly', () => {
 			return request
 				.post('/api/articles')
 				.send({ topic: 'mitch', username: 'rogersop', title: 'test title', body: 'test body' })
@@ -290,13 +290,12 @@ describe('/', () => {
 					]);
 				});
 		});
-		it.only('POST - 200 - post an article with a topic which does not exist', () => {
+		it.only('POST - 201 - post an article with a topic which does not exist', () => {
 			return request
 				.post('/api/articles')
-				.send({ topic: 'newTopic', username: 'rogersop', body: 'test body' })
+				.send({ topic: 'newTopic', username: 'rogersop', body: 'test body', title: 'test title' })
 				.expect(201)
 				.then(({ body }) => {
-					console.log(body);
 					expect(body).to.have.property('article');
 				});
 		});

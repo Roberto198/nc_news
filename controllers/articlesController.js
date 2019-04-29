@@ -5,7 +5,7 @@ const {
 	patchArticle,
 	postArticle,
 } = require('../models/articlesModels');
-const { selectAllTopics } = require('../models/topicsModels');
+const { selectAllTopics, insertTopic } = require('../models/topicsModels');
 const { selectUsers } = require('../models/usersModels');
 
 exports.sendAllArticles = (req, res, next) => {
@@ -83,10 +83,25 @@ exports.updateArticle = (req, res, next) => {
 
 exports.uploadArticle = (req, res, next) => {
 	const { body } = req;
-	postArticle(body)
-		.then(article => {
-			res.status(201).send({ article: article[0] });
+	const topicCheck = selectAllTopics(body.topic);
+
+	Promise.all([topicCheck])
+		.then(topic => {
+			if (topic[0].length > 0) {
+				postArticle(body).then(article => {
+					res.status(201).send({ article: article[0] });
+				});
+			} else {
+				insertTopic(body).then(topic => {
+					{
+						postArticle(body).then(article => {
+							res.status(201).send({ article: article[0] });
+						});
+					}
+				});
+			}
 		})
+
 		.catch(err => {
 			console.log(err);
 			next(err);
