@@ -37,10 +37,20 @@ exports.formatCommentsData = (comments, ref) => {
 	}, []);
 };
 
-exports.formatComment = (comment, params) => {
+exports.formatComment = (insertedData, params) => {
+	let result = {
+		author: insertedData.username,
+		body: insertedData.body,
+		topic: insertedData.topic,
+		title: insertedData.title,
+	};
+	params ? (result.article_id = params.article_id) : '';
+	return result;
+};
+
+exports.formatTopic = body => {
 	return {
-		author: comment.username,
-		article_id: params.article_id,
-		body: comment.body,
+		slug: body.topic,
+		description: body.description,
 	};
 };

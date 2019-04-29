@@ -301,10 +301,10 @@ GET /api
 -   JSON describing all the available endpoints on your API
 
 --- -->
-
+<!--
 ### Step 3 - Hosting
 
-Make sure your application and your database is hosted using Heroku
+Make sure your application and your database is hosted using Heroku -->
 
 ### Step 4 - README
 
@@ -314,7 +314,7 @@ It should also include the link to where your Heroku app is hosted.
 
 Take a look at GitHub's guide for [mastering markdown](https://guides.github.com/features/mastering-markdown/) for making it look pretty!
 
-### Optional Extras
+<!-- ### Optional Extras
 
 #### Pagination
 
@@ -329,16 +329,16 @@ GET /api/articles
     -   `p`, stands for page which specifies the page at which to start (calculated using limit)
 -   add a `total_count` property, displaying the total number of articles (**this should display the total number of articles with any filters applied, discounting the limit**)
 
----
+--- -->
 
-```http
+<!-- ```http
 GET /api/articles/:article_id/comments
 ```
 
 Should accept the following queries:
 
 -   `limit`, which limits the number of responses (defaults to 10)
--   `p`, stands for page which specifies the page at which to start (calculated using limit)
+-   `p`, stands for page which specifies the page at which to start (calculated using limit) -->
 
 #### More Routes
 

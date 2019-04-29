@@ -1,5 +1,6 @@
 const connection = require('../db/connection');
 const { sendAllTopics } = require('../models/topicsModels');
+const { formatComment } = require('../utils/utils');
 
 exports.selectAllArticles = ({ author, topic, sort_by, order, limit, p }) => {
 	const offset = limit * (p - 1);
@@ -72,4 +73,15 @@ exports.patchArticle = (vote, id) => {
 		.groupBy('articles.article_id')
 		.increment('votes', vote || 0)
 		.returning('*');
+};
+
+exports.postArticle = body => {
+	const sqlArticle = formatComment(body);
+	if (sqlArticle.author === undefined || sqlArticle.body === undefined) {
+		return Promise.reject({ status: 400, msg: 'Incorrect keys to insert article (Please use username and body)' });
+	} else {
+		return connection('articles')
+			.insert(sqlArticle)
+			.returning('*');
+	}
 };

@@ -272,6 +272,34 @@ describe('/', () => {
 					expect(body.msg).to.equal('Values must be an integer: Article_id, Inc_votes, comment_id');
 				});
 		});
+		it.only('POST - 200 - post an article correctly', () => {
+			return request
+				.post('/api/articles')
+				.send({ topic: 'mitch', username: 'rogersop', title: 'test title', body: 'test body' })
+				.expect(201)
+				.then(({ body }) => {
+					expect(body).to.have.property('article');
+					expect(body.article).to.have.keys([
+						'article_id',
+						'title',
+						'body',
+						'votes',
+						'topic',
+						'author',
+						'created_at',
+					]);
+				});
+		});
+		it.only('POST - 200 - post an article with a topic which does not exist', () => {
+			return request
+				.post('/api/articles')
+				.send({ topic: 'newTopic', username: 'rogersop', body: 'test body' })
+				.expect(201)
+				.then(({ body }) => {
+					console.log(body);
+					expect(body).to.have.property('article');
+				});
+		});
 	});
 
 	describe('/api/comments', () => {
@@ -410,6 +438,26 @@ describe('/', () => {
 					expect(body.topics).to.be.an('array');
 					expect(body.topics[0]).to.have.property('slug');
 					expect(body.topics[0]).to.have.property('description');
+				});
+		});
+		it('POST - 201 - post new topic', () => {
+			return request
+				.post('/api/topics')
+				.send({ topic: 'newTopic', description: 'test desc' })
+				.expect(201)
+				.then(({ body }) => {
+					expect(body).to.have.property('topic');
+					expect(body.topic).to.have.keys(['slug', 'description']);
+				});
+		});
+		it('POST - 201 - post new topic without description', () => {
+			return request
+				.post('/api/topics')
+				.send({ topic: 'newTopic' })
+				.expect(201)
+				.then(({ body }) => {
+					expect(body).to.have.property('topic');
+					expect(body.topic).to.have.keys(['slug', 'description']);
 				});
 		});
 		it('GET - status 405 - when trying to patch to topics', () => {

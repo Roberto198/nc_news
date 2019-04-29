@@ -3,6 +3,7 @@ const {
 	selectAllArticles,
 	selectArticlesComments,
 	patchArticle,
+	postArticle,
 } = require('../models/articlesModels');
 const { selectAllTopics } = require('../models/topicsModels');
 const { selectUsers } = require('../models/usersModels');
@@ -78,4 +79,16 @@ exports.updateArticle = (req, res, next) => {
 			} else res.status(200).send({ article });
 		})
 		.catch(next);
+};
+
+exports.uploadArticle = (req, res, next) => {
+	const { body } = req;
+	postArticle(body)
+		.then(article => {
+			res.status(201).send({ article: article[0] });
+		})
+		.catch(err => {
+			console.log(err);
+			next(err);
+		});
 };

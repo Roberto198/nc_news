@@ -5,6 +5,7 @@ const {
 	sendAllArticles,
 	sendArticlesComments,
 	updateArticle,
+	uploadArticle,
 } = require('../controllers/articlesController');
 const { uploadComment } = require('../controllers/commentsController');
 
@@ -22,6 +23,7 @@ articlesRouter
 
 articlesRouter
 	.route('/')
+	.post(uploadArticle)
 	.get(sendAllArticles)
 	.all(methodNotAllowed);
 
