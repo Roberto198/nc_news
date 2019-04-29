@@ -14,6 +14,9 @@ exports.sendAllArticles = (req, res, next) => {
 	const checkAuthors = selectUsers(author);
 	const sendArticles = selectAllArticles(query);
 
+	const countObj = { ...req.query };
+	countObj.limit = 999999;
+
 	Promise.all([checkTopics, checkAuthors, sendArticles])
 		.then(([topic, author, article]) => {
 			if (topic.length === 0 && req.query.topic) {
@@ -22,7 +25,9 @@ exports.sendAllArticles = (req, res, next) => {
 			if (author.length === 0 && req.query.author) {
 				return Promise.reject({ status: 404, msg: 'No such author found' });
 			} else {
-				res.status(200).send({ articles: article });
+				selectAllArticles(countObj).then(results => {
+					res.status(200).send({ articles: article, article_count: results.length });
+				});
 			}
 		})
 		.catch(next);
@@ -42,17 +47,21 @@ exports.sendArticleById = (req, res, next) => {
 };
 
 exports.sendArticlesComments = (req, res, next) => {
-	const { query, limit, p } = req;
+	const { query } = req;
 	const { article_id } = req.params;
 	const checkArticles = selectArticleById(article_id);
-	const getComments = selectArticlesComments(article_id, query, limit, p);
+	const getComments = selectArticlesComments(article_id, query);
+	const countObj = { ...req.query };
+	countObj.limit = 999999;
 
 	Promise.all([checkArticles, getComments])
 		.then(([article, comments]) => {
 			if (article.length === 0) {
 				return Promise.reject({ status: 404, msg: 'Article not found' });
 			} else {
-				res.status(200).send({ comments });
+				selectArticlesComments(article_id, countObj).then(result =>
+					res.status(200).send({ comments, comment_count: result.length })
+				);
 			}
 		})
 		.catch(next);

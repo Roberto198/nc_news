@@ -46,9 +46,6 @@ exports.selectArticleById = id => {
 
 exports.selectArticlesComments = (id, query) => {
 	const offset = query.limit * (query.p - 1);
-	console.log(query.limit);
-	console.log(query.p);
-	console.log(offset);
 
 	return connection('comments')
 		.select('comment_id', 'votes', 'created_at', 'author', 'body')
