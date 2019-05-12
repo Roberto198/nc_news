@@ -41,10 +41,10 @@ exports.formatComment = (insertedData, params) => {
 	let result = {
 		author: insertedData.username,
 		body: insertedData.body,
-		topic: insertedData.topic,
-		title: insertedData.title,
 	};
-	params ? (result.article_id = params.article_id) : '';
+	insertedData.topic ? (result.topic = insertedData.topic) : null;
+	insertedData.title ? (result.title = insertedData.title) : null;
+	params ? (result.article_id = params.article_id) : null;
 	return result;
 };
 

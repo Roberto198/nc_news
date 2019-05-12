@@ -8,7 +8,9 @@ exports.removeComment = (req, res, next) => {
 			if (result === 1) res.status(204).send();
 			else if (result === 0) return Promise.reject({ status: 404, msg: 'Error: comment not found with this ID' });
 		})
-		.catch(next);
+		.catch(err => {
+			next(err);
+		});
 };
 
 exports.uploadComment = (req, res, next) => {
