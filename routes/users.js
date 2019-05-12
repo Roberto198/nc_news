@@ -7,4 +7,6 @@ userRouter
 	.get(sendUsers)
 	.all(methodNotAllowed);
 
+userRouter.route('/').get(sendUsers);
+
 module.exports = userRouter;
