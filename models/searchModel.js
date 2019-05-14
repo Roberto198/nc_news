@@ -2,7 +2,7 @@ const connection = require('../db/connection');
 
 exports.selectAllSearch = (searchTerm, query) => {
 	let { sort_by, order } = query;
-
+	console.log(searchTerm, 'searchTerm');
 	let basicQuery = connection
 		.select(
 			'articles.article_id',
@@ -13,9 +13,6 @@ exports.selectAllSearch = (searchTerm, query) => {
 			'articles.author',
 			'articles.created_at'
 		)
-		.where('articles.body', 'like', `%${searchTerm}%` || '%')
-		.orWhere('articles.title', 'like', `%${searchTerm}%` || '%')
-		.orWhere('articles.title', 'like', `%${searchTerm}%` || '%')
 		.from('articles')
 		.join('comments', 'articles.article_id', '=', 'comments.article_id')
 		.count('comments.article_id as comment_count')
@@ -24,6 +21,11 @@ exports.selectAllSearch = (searchTerm, query) => {
 	if (query.sort_by) {
 		basicQuery.orderBy(sort_by || 'created_at', order || 'desc');
 	}
+	if (searchTerm)
+		basicQuery
+			.where('articles.body', 'like', `%${searchTerm}%` || '%')
+			.orWhere('articles.title', 'like', `%${searchTerm}%` || '%')
+			.orWhere('articles.title', 'like', `%${searchTerm}%` || '%');
 
 	return basicQuery;
 };
