@@ -23,9 +23,10 @@ exports.selectAllSearch = (searchTerm, query) => {
 	}
 	if (searchTerm)
 		basicQuery
-			.where('articles.body', 'like', `%${searchTerm}%` || '%')
-			.orWhere('articles.title', 'like', `%${searchTerm}%` || '%')
-			.orWhere('articles.title', 'like', `%${searchTerm}%` || '%');
+			.where('articles.body', 'ilike', `%${searchTerm}%` || '%')
+			.orWhere('articles.title', 'ilike', `%${searchTerm}%` || '%')
+			.orWhere('articles.title', 'ilike', `%${searchTerm}%` || '%')
+			.orWhere('articles.author', 'ilike', `%${searchTerm}%` || '%');
 
 	return basicQuery;
 };
