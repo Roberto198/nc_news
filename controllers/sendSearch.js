@@ -2,8 +2,9 @@ const { selectAllSearch } = require('../models/searchModel');
 
 exports.sendSearch = (req, res, next) => {
 	const { search_term } = req.params;
-	console.log(search_term);
-	selectAllSearch(search_term)
+	const { query } = req;
+	console.log(search_term, query);
+	selectAllSearch(search_term, query)
 		.then(articles => {
 			res.status(200).send({ articles });
 		})
