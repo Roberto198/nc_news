@@ -1,4 +1,4 @@
-const { deleteComment, postComment, patchComment } = require('../models/commentsModels');
+const { deleteComment, postComment, patchComment, selectAllComments } = require('../models/commentsModels');
 
 exports.removeComment = (req, res, next) => {
 	const { comment_id } = req.params;
@@ -37,4 +37,9 @@ exports.updateComment = (req, res, next) => {
 		.catch(err => {
 			next(err);
 		});
+};
+
+exports.sendAllComments = (req, res, next) => {
+	console.log(req.query);
+	selectAllComments(req.query).then(data => res.status(200).send(data));
 };

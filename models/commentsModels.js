@@ -29,3 +29,13 @@ exports.patchComment = (vote, id) => {
 		.increment('votes', vote || 0)
 		.returning('*');
 };
+
+exports.selectAllComments = query => {
+	const allComments = connection.select('*').from('comments');
+
+	if (query) {
+		allComments.where('author', 'like', query.author);
+	}
+
+	return allComments;
+};
