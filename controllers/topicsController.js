@@ -4,7 +4,7 @@ exports.sendAllTopics = (req, res, next) => {
 	const { topic } = req.query;
 	selectAllTopics(topic)
 		.then(topics => {
-			res.status(200).send({ topics });
+			res.status(200).send({ topics, topics_count: topics.length });
 		})
 		.catch(next);
 };
