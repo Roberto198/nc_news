@@ -1,13 +1,16 @@
-const { selectAllSearch } = require('../models/searchModel');
+const { selectAllSearch, countArticles } = require('../models/searchModel');
 
 exports.sendSearch = (req, res, next) => {
 	const { search_term } = req.params;
 	const { query } = req;
-	selectAllSearch(search_term, query)
-		.then(articles => {
-			res.status(200).send({ articles, article_count: articles.length });
+	const limitedQuery = selectAllSearch(search_term, query);
+	const unlimitedQuery = countArticles(search_term, query);
+	Promise.all([limitedQuery, unlimitedQuery])
+		.then(([limitedArticles, count]) => {
+			res.status(200).send({ articles: limitedArticles, article_count: count.length });
 		})
 		.catch(err => {
+			console.log(err);
 			next(err);
 		});
 };
