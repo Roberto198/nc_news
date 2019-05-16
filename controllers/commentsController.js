@@ -41,5 +41,9 @@ exports.updateComment = (req, res, next) => {
 
 exports.sendAllComments = (req, res, next) => {
 	console.log(req.query);
-	selectAllComments(req.query).then(data => res.status(200).send(data));
+	selectAllComments(req.query)
+		.then(comments => res.status(200).send({ comments, comment_count: comments.length }))
+		.catch(err => {
+			next(err);
+		});
 };
