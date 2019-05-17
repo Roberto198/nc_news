@@ -1,7 +1,7 @@
 const connection = require('../db/connection');
 
 exports.selectAllSearch = (searchTerm, query) => {
-	let { sort_by, order, limit, p } = query;
+	let { sort_by, order, limit, p, author, topic } = query;
 	console.log(searchTerm, 'searchTerm');
 	let basicQuery = connection
 		.select(
@@ -31,12 +31,18 @@ exports.selectAllSearch = (searchTerm, query) => {
 		const offset = limit * (p - 1);
 		basicQuery.limit(limit || 9999).offset(offset || 0);
 	}
+	if (query.author) {
+		basicQuery.where('articles.author', 'ilike', `%${author}%` || '%');
+	}
+	if (query.topic) {
+		basicQuery.where('articles.topic', 'ilike', `%${topic}%` || '%');
+	}
 
 	return basicQuery;
 };
 
 exports.countArticles = (searchTerm, query) => {
-	let { sort_by, order } = query;
+	let { sort_by, order, author, topic } = query;
 	console.log(searchTerm, 'searchTerm');
 	let basicQuery = connection
 		.select(
@@ -61,6 +67,12 @@ exports.countArticles = (searchTerm, query) => {
 			.orWhere('articles.title', 'ilike', `%${searchTerm}%` || '%')
 			.orWhere('articles.title', 'ilike', `%${searchTerm}%` || '%')
 			.orWhere('articles.author', 'ilike', `%${searchTerm}%` || '%');
+	}
+	if (query.author) {
+		basicQuery.where('articles.author', 'ilike', `%${author}%` || '%');
+	}
+	if (query.topic) {
+		basicQuery.where('articles.topic', 'ilike', `%${topic}%` || '%');
 	}
 
 	return basicQuery;
