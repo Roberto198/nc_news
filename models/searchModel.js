@@ -1,8 +1,8 @@
 const connection = require("../db/connection");
 
 exports.selectAllSearch = (searchTerm, query) => {
-  let { sort_by, order, limit, p, author, topic } = query;
-  let basicQuery = connection
+  const { sort_by, order, limit, p, author, topic } = query;
+  const basicQuery = connection
     .select(
       "articles.article_id",
       "articles.title",
@@ -41,8 +41,8 @@ exports.selectAllSearch = (searchTerm, query) => {
 };
 
 exports.countArticles = (searchTerm, query) => {
-  let { sort_by, order, author, topic } = query;
-  let basicQuery = connection
+  const { sort_by, order, author, topic } = query;
+  const basicQuery = connection
     .select(
       "articles.article_id",
       "articles.title",
