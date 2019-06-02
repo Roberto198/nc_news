@@ -3,7 +3,8 @@ const {
   selectAllArticles,
   selectArticlesComments,
   patchArticle,
-  postArticle
+  postArticle,
+  deleteArticle
 } = require("../models/articlesModels");
 const { selectAllTopics, insertTopic } = require("../models/topicsModels");
 const { selectUsers } = require("../models/usersModels");

@@ -298,6 +298,14 @@ describe('/', () => {
 				.then(({ body }) => {
 					expect(body).to.have.property('article');
 				});
+		});		
+		it.only('Delete - 200 - delete an article', () => {
+			return request
+				.delete('/api/articles/1')
+				.expect(204)
+				.then(({ body }) => {
+					expect(body).to.be.an('object')			
+				});
 		});
 	});
 

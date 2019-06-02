@@ -90,10 +90,15 @@ exports.postArticle = body => {
 };
 
 exports.deleteArticle = id => {
-  return connection("articles")
+  return connection("comments")
     .where("article_id", id)
     .delete()
     .then(result => {
-      return result;
+      return connection("articles")
+        .where("article_id", id)
+        .delete()
+        .then(result => {
+          return result;
+        });
     });
 };
